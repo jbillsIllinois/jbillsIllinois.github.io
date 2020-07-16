@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<body onload='init()'>
+<style>
+    .dot {
+        stroke: #000;
+    }
+</style>
+
+<h1>
+    Looking For A New Car?
+</h1>
+<p>
+    Buying a new car can be difficult, let us help you simplify it. 
+    The below scatterplot lets you explore the different car manufactures 
+    and thier cylinder and average MPG offerings. 
+</p>
+<div id='carScatter'></div>
+
+<script>
+    async function init() {
+
+    //load data
+    const data = await d3.csv('cars2017.csv');
+    console.log(d);
+    //set margin
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+    //setup x
+    var xValue = function(d) {return d.EngineCylinders;},
+        xScale = d3.scale.linear().range([0, width]),
+        xMap = function(d) {return xScale(xValue(d));},
+        xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+
+    //setup y
+    var yValue = function(d) {return d.AverageHighwayCity;},
+        yScale = d3.scale.linear().range([0, width]),
+        yMap = function(d) {return yScale(yValue(d));},
+        yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+    //setup fill
+    var cValue = function(d) {return d.Make;},
+        color = d3.scale.category10();
+
+    //setup main svg    
+    var svg = d3.select("body").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    //x-axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+      .append("text")
+        .attr("class", "lable")
+        .attr("x", width)
+        .attr("y", -6)
+        .style("text-anchor", "end")
+        .text("Cylinders");
+
+    //y-axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+      .append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Average MPG");
+
+    //draw dots
+    svg.selectAll(".dot")
+        .data(data)
+      .enter().append("circle")
+        .attr("class", "dot")
+        .attr("r", 3.5)
+        .attr("cx", xMap)
+        .attr("cy", yMap)
+        .style("fill", function(d) {return color(cValue(d));});
+
+    }
+
+</script>
+
+</body>
+</html>
