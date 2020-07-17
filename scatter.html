@@ -33,13 +33,13 @@
     var xValue = function(d) {return d.EngineCylinders;},
         xScale = d3.scaleLinear().range([0, width]),
         xMap = function(d) {return xScale(xValue(d));},
-        xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+        xAxis = d3.axisBottom(xScale);
 
     //setup y
     var yValue = function(d) {return d.AverageHighwayCity;},
         yScale = d3.scaleLinear().range([0, width]),
         yMap = function(d) {return yScale(yValue(d));},
-        yAxis = d3.svg.axis().scale(yScale).orient("left");
+        yAxis = d3.axisLeft(yScale);
 
     //setup fill
     var cValue = function(d) {return d.Make;},
