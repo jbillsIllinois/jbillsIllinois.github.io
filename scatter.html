@@ -24,6 +24,7 @@
 
     //load data
     const data = await d3.csv('cars2017.csv');
+    
     console.log(data);
     
     //set margin
@@ -57,6 +58,12 @@
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
+    d3.csv('cars2017.csv', function(error, data) {
+        data.forEach(function(d) {
+            d.EngineCylinders = +d.EnginCylinders;
+            d.AverageHighwayCity = +d.AverageHighwayCity;
+        });
 
     //x-axis
     svg.append("g")
@@ -92,7 +99,8 @@
         .attr("cy", yMap)
         .style("fill", function(d) {return color(cValue(d));});
 
-    }
+    });
+}
 
 </script>
 
