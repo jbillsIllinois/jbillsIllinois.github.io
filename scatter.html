@@ -23,6 +23,7 @@
 
     //load data
     const data = await d3.csv('cars2017.csv');
+    console.log(data);
     
     //set margin
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -35,6 +36,9 @@
         xMap = function(d) {return xScale(xValue(d));},
         xAxis = d3.axisBottom(xScale);
     console.log(xValue);    
+    console.log(xScale); 
+    console.log(xMap); 
+    console.log(xAxis);     
 
     //setup y
     var yValue = function(d) {return d.AverageHighwayCity;},
