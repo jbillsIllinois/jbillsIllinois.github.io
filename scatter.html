@@ -43,7 +43,7 @@
 
     //setup fill
     var cValue = function(d) {return d.Make;},
-        color = d3.scale.category10();
+        color = d3.scaleOrdinal(d3.schemeCategory10);
 
     //setup main svg    
     var svg = d3.select("body").append("svg")
