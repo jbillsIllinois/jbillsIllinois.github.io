@@ -19,27 +19,51 @@
         color: white;
 
     }
+    .maxLabel {
+        background: steelblue;
+        font-size: 26px;
+        color: steelblue;
+        opacity: .5;
+    }
+    .navButtons {
+        background-color: white;
+        color: black;
+        border: 2px solid lightskyblue;
+        width: 150px;
+    }
+    .selectButton {
+        background-color: lightskyblue;
+        color: black;
+        width: 150px;
+    }
 </style>
-<button onclick="location.href='scatter.html';">1 Gasoline</button>
-<button onclick="location.href='scatter2.html';">2 Diesel</button>
-<button onclick="location.href='scatter3.html';">3 Electric</button>
+<button class="navButtons" onclick="location.href='scatter.html';">1: Diesel</button>
+<button class="selectButton" onclick="location.href='scatter2.html';">2: Gasoline</button>
+<button class="navButtons" onclick="location.href='scatter3.html';">3: Electric</button>
 
 <h1>
-    Diesel Vehicles
+    Gasoline Vehicles' Average MPG
 </h1>
-<p>
-    Buying a new car can be difficult, let us help you simplify it. 
-    The below scatterplot lets you explore the different car manufactures 
-    and thier average city and highway MPG offerings. 
+<p style="font-size: 20px;">
+    Are Cleaner Fuel Types More Efficient? 
 </p>
+<p>
+    Gasoline engines have been the staple for many years in the consumer world. With that there have been many leaps forward in effeciency. 
+</p>
+<div style="display: inline-block;"> 
+    <img src="error.png">
+</div>
+<div style="display: inline-block; color: red; font-size: 12px;">
+    <p>Hover over each dot in the chart to see more details.</p>
+</div>
 <div id="mydataviz"></div>
 
 <script>
     
     //set margin
-    var margin = {top: 20, right: 200, bottom: 50, left: 60},
-    width = 960 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+    var margin = {top: 20, right: 250, bottom: 65, left: 60},
+    width = 1350 - margin.left - margin.right,
+    height = 775 - margin.top - margin.bottom;
 
     //create svg and g to svg
     var svg = d3.select("#mydataviz").append("svg")
@@ -64,7 +88,7 @@
     d3.csv("cars2017.csv").then(function(csv) {
       
         //filter data 
-        data = csv.filter(function(d) {return d.Fuel == "Diesel"});
+        data = csv.filter(function(d) {return d.Fuel == "Gasoline"});
 
         //get unique list of makes
         myMakesArray = [];
@@ -81,8 +105,9 @@
         });
 
         //scale th range of the data
-        x.domain([0,d3.max(data, function(d) {return d.AverageHighwayMPG;})]);
-        y.domain([0,d3.max(data, function(d) {return d.AverageCityMPG})]);
+        x.domain([0,d3.max(data, function(d) {return d.AverageHighwayMPG;}) + 10]);
+        y.domain([0,d3.max(data, function(d) {return d.AverageCityMPG}) + 10]);
+ 
 
 
         //add the X Axis
@@ -108,6 +133,25 @@
             .attr("y", -margin.left + 20)
             .attr("x", -margin.top)
             .text("Average City MPG");
+
+        //add annotation
+        var maxLabelString = '';
+        var maxHighway = d3.max(data,function(d) {return d.AverageHighwayMPG});
+        var maxCity = d3.max(data,function(d) {return d.AverageCityMPG});
+
+        svg. append("text")
+            .attr("text-anchor", "end")
+            .attr("class", "maxLabel")
+            .attr("y", -margin.left + 100)
+            .attr("x", -margin.top + 350)
+            .text(maxLabelString.concat("Max Highway MPG: ",maxHighway));
+
+        svg. append("text")
+            .attr("text-anchor", "end")
+            .attr("class", "maxLabel")
+            .attr("y", -margin.left + 135)
+            .attr("x", -margin.top + 350)
+            .text(maxLabelString.concat("Max City MPG: ",maxCity));
 
         //setup tooltip
         var tooltip = d3.select("#mydataviz")
@@ -143,7 +187,7 @@
         svg.selectAll("dot")
             .data(data)
             .enter().append("circle")
-            .attr("r", 5)
+            .attr("r", 6)
             .attr("cx", function(d) {return x(d.AverageHighwayMPG);})
             .attr("cy", function(d) {return y(d.AverageCityMPG);})
             .attr("data-legend",function(d){return d.Make})
@@ -160,9 +204,9 @@
         svg.selectAll("myLegendDot")
             .data(myMakesArray)
             .enter().append("circle")
-            .attr("r", 5)
-            .attr("cx", 800)
-            .attr("cy", function(d,i){return 0 + i*15})
+            .attr("r", 6)
+            .attr("cx", 1150)
+            .attr("cy", function(d,i){return 0 + i*16})
             .style("fill", function(d) {return lcolor(lValue(d));})
 
 
@@ -170,12 +214,12 @@
         svg.selectAll("myLegendText")
             .data(myMakesArray)
             .enter().append("text")
-            .attr("x", 820)
-            .attr("y", function(d,i){return 0 + i*15})
+            .attr("x", 1170)
+            .attr("y", function(d,i){return 0 + i*16})
             .text(function(d){return d})
             .attr("text-anchor", "left")
             .style("alignment-baseline", "middle")
-            .style("font-size", "13px");
+            .style("font-size", "14px");
 
             console.log(myMakesArray);
             
